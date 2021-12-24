@@ -1,0 +1,16 @@
+before:
+  hooks:
+    - go mod download
+builds:
+  - main: main.go
+    binary: gh-app-auth
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - arm64
+checksum:
+  name_template: 'checksums.txt'
