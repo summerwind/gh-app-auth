@@ -29,7 +29,7 @@ Usage of gh-app-auth:
 
 ## GitHub Actions
 
-You can run GitHub Apps authentication on GitHub Actions to get a installation token as follows.
+You can run `gh-app-auth` on GitHub Actions to get a installation token as follows.
 
 ```
 - id: gh-app-auth
