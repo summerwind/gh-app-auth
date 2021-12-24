@@ -1,0 +1,45 @@
+name: gh-app-auth
+description: Authenticate with the GitHub App and generate the installation token
+inputs:
+  app-id:
+    description: GitHub App ID
+    required: true
+  private-key:
+    description: GitHub App private key
+    required: true
+  account:
+    description: Target account name
+    required: true
+  version:
+    description: Version to install
+    default: latest
+    required: false
+outputs:
+  token:
+    description: Installation token
+    value: ${{ steps.auth.outputs.token }}
+runs:
+  using: composite
+  steps:
+    - id: install
+      shell: bash
+      working-directory: /tmp
+      run: |
+        set -e
+        VERSION="${{ inputs.version }}"
+        if [ "${VERSION}" = "latest" ]; then
+          DOWNLOAD_URL=$(curl -sS https://api.github.com/repos/summerwind/gh-app-auth/releases/latest|jq -r '.assets[].browser_download_url|select(match("linux.amd64."))')
+        else
+          DOWNLOAD_URL=$(curl -sS https://api.github.com/repos/summerwind/gh-app-auth/releases/tags/${VERSION}|jq -r '.assets[].browser_download_url|select(match("linux.amd64."))')
+        fi
+        curl -sfL -o gh-app-auth.tar.gz ${DOWNLOAD_URL}
+        tar xzvf gh-app-auth.tar.gz
+        sudo install gh-app-auth /usr/local/bin/gh-app-auth
+    - id: auth
+      shell: bash
+      run: |
+        set -e
+        echo "${{ inputs.private-key }}" > /tmp/gh-app-private-key.pem
+        TOKEN=$(/usr/local/bin/gh-app-auth --app-id "${{ inputs.app-id }}" --private-key "/tmp/gh-app-private-key.pem" --account "${{ inputs.account }}")
+        echo "::add-mask::$TOKEN"
+        echo "::set-output name=token::$TOKEN"
