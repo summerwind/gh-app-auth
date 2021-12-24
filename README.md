@@ -10,7 +10,7 @@ $ go install github.com/summerwind/gh-app-auth@latest
 
 ## Usage
 
-If you specify the GitHub App ID, Private Key, and the target account name, This command will generate and display the installation token.
+This command will generate and display the installation token based on GitHub App ID, private key and account name.
 
 ```
 $ gh-app-auth --app-id 12345 --private-key /path/to/private-key.pem --account summerwind
@@ -31,7 +31,7 @@ Usage of gh-app-auth:
 
 You can run `gh-app-auth` on GitHub Actions to get a installation token as follows.
 
-```
+```yaml
 - id: gh-app-auth
   uses: summerwind/gh-app-auth@main
   with:
