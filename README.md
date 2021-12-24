@@ -27,6 +27,25 @@ Usage of gh-app-auth:
   -f, --private-key string   Path to the private key file of GitHub App
 ```
 
+## GitHub Actions
+
+You can run GitHub Apps authentication on GitHub Actions to get a installation token as follows.
+
+```
+- id: gh-app-auth
+  uses: summerwind/gh-app-auth@main
+  with:
+    app-id: 12345
+    private-key: ${{ secrets.GH_APP_AUTH_PRIVATE_KEY }}
+    account: summerwind
+- run: |
+    cat << EOL > ~/.netrc
+    machine github.com
+    login git
+    password ${{ steps.gh-app-auth.outputs.token }}
+    EOL
+```
+
 ## License
 
 MIT license.
