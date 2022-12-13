@@ -14,6 +14,10 @@ inputs:
     description: Version to install
     default: latest
     required: false
+  retry:
+    description: Maximum number of GitHub API call attempts
+    default: "2"
+    required: false
 outputs:
   token:
     description: Installation token
@@ -28,11 +32,11 @@ runs:
         set -e
         VERSION="${{ inputs.version }}"
         if [ "${VERSION}" = "latest" ]; then
-          DOWNLOAD_URL=$(curl -sS https://api.github.com/repos/summerwind/gh-app-auth/releases/latest|jq -r '.assets[].browser_download_url|select(match("linux.amd64."))')
+          DOWNLOAD_URL=$(curl -sSf --retry ${{ inputs.retry }} --retry-all-errors https://api.github.com/repos/summerwind/gh-app-auth/releases/latest|jq -r '.assets[].browser_download_url|select(match("linux.amd64."))')
         else
-          DOWNLOAD_URL=$(curl -sS https://api.github.com/repos/summerwind/gh-app-auth/releases/tags/${VERSION}|jq -r '.assets[].browser_download_url|select(match("linux.amd64."))')
+          DOWNLOAD_URL=$(curl -sSf --retry ${{ inputs.retry }} --retry-all-errors https://api.github.com/repos/summerwind/gh-app-auth/releases/tags/${VERSION}|jq -r '.assets[].browser_download_url|select(match("linux.amd64."))')
         fi
-        curl -sfL -o gh-app-auth.tar.gz ${DOWNLOAD_URL}
+        curl -sSfL --retry ${{ inputs.retry }} --retry-all-errors -o gh-app-auth.tar.gz ${DOWNLOAD_URL}
         tar xzvf gh-app-auth.tar.gz
         sudo install gh-app-auth /usr/local/bin/gh-app-auth
     - id: auth
