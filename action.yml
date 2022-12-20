@@ -42,4 +42,4 @@ runs:
         echo "${{ inputs.private-key }}" > /tmp/gh-app-private-key.pem
         TOKEN=$(/usr/local/bin/gh-app-auth --app-id "${{ inputs.app-id }}" --private-key "/tmp/gh-app-private-key.pem" --account "${{ inputs.account }}")
         echo "::add-mask::$TOKEN"
-        echo "::set-output name=token::$TOKEN"
+        echo "token=$TOKEN" >> $GITHUB_OUTPUT
