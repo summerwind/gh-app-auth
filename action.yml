@@ -12,7 +12,7 @@ inputs:
     required: true
   version:
     description: Version to install
-    default: "0.1.0"
+    default: "0.1.1"
     required: false
 outputs:
   token:
