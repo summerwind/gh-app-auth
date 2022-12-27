@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/bradleyfalzon/ghinstallation"
-	"github.com/google/go-github/v41/github"
+	"github.com/bradleyfalzon/ghinstallation/v2"
+	"github.com/google/go-github/v45/github"
 	flag "github.com/spf13/pflag"
 )
 
